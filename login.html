@@ -77,44 +77,80 @@
     </form>
   </div>
 
-  <script>
-    const form = document.getElementById('loginForm');
-    const errorMessage = document.getElementById('errorMessage');
+  ```html
+<script>
+  const form = document.getElementById('loginForm');
+  const errorMessage = document.getElementById('errorMessage');
 
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-      errorMessage.textContent = '';
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
 
-      const email = form.email.value.trim();
-      const password = form.password.value.trim();
+    errorMessage.innerHTML = '';
 
-      if (!email) {
-        errorMessage.textContent = 'Please enter your email.';
-        form.email.focus();
-        return;
-      }
+    const email = form.email.value.trim();
+    const password = form.password.value.trim();
 
-      if (!form.email.checkValidity()) {
-        errorMessage.textContent = 'Please enter a valid email address.';
-        form.email.focus();
-        return;
-      }
+    let errors = [];
 
-      if (!password) {
-        errorMessage.textContent = 'Please enter your password.';
-        form.password.focus();
-        return;
-      }
+    // Email Validation
+    if (email === '') {
+      errors.push('Email is required.');
+    } 
+    else if (!form.email.checkValidity()) {
+      errors.push('Enter a valid email address.');
+    }
 
-      if (password.length < 6) {
-        errorMessage.textContent = 'Password must be at least 6 characters long.';
-        form.password.focus();
-        return;
-      }
+    // Optional domain check
+    if (email && !email.endsWith('@gmail.com')) {
+      errors.push('Only Gmail accounts are allowed.');
+    }
 
-      alert('Login successful!');
-      form.reset();
-    });
-  </script>
+    // Password Validation
+    if (password === '') {
+      errors.push('Password is required.');
+    }
+
+    // Minimum length
+    if (password.length < 8) {
+      errors.push('Password must be at least 8 characters.');
+    }
+
+    // Uppercase letter
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Password must contain at least one uppercase letter.');
+    }
+
+    // Lowercase letter
+    if (!/[a-z]/.test(password)) {
+      errors.push('Password must contain at least one lowercase letter.');
+    }
+
+    // Number check
+    if (!/[0-9]/.test(password)) {
+      errors.push('Password must contain at least one number.');
+    }
+
+    // Special character check
+    if (!/[!@#$%^&*]/.test(password)) {
+      errors.push('Password must contain at least one special character.');
+    }
+
+    // No spaces allowed
+    if (/\s/.test(password)) {
+      errors.push('Password should not contain spaces.');
+    }
+
+    // Display Errors
+    if (errors.length > 0) {
+      errorMessage.innerHTML = errors.join('<br>');
+      return;
+    }
+
+    alert('Login Successful!');
+    form.reset();
+  });
+</script>
+```
+
 </body>
 </html>
